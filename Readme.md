@@ -7,10 +7,10 @@ Init screens from config files
 ## Config file layout
 
 ```
-<screen title>
+<screen session name>
 <window name>#<command>
 ```
 
-`screen title` is the name you use for getting the screen, see `screen -ls`. Must be Alphanumeric without spaces.
+`screen session name` is the name you use for gstting the screen session name, see `screen -ls`. Must be Alphanumeric without spaces.
 `window name` is the name for this window
 `command` can be any comamnd sequence separated by `;`. If nothing given default `^C` shell is used
