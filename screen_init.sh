@@ -25,8 +25,7 @@
 set -e
 
 ERROR=0;
-if [ ! -f "$1" ];
-then
+if [ ! -f "$1" ]; then
 	echo "Cannot find screen init config file '$1'";
 	ERROR=1;
 else
@@ -35,11 +34,10 @@ else
 fi;
 
 # check if we are in a screen one, if yes, exit
-if [ -z "$STY" ];
-then
+if [ -z "$STY" ]; then
 	# check if the "work" screen exists
-	if [ ! -z "$SCREEN_NAME" ] && [[ ! -z $(screen -ls | grep ".$SCREEN_NAME\t") ]];
-	then
+	# if [ -n "$SCREEN_NAME" ] && [[ -n $(screen -ls | grep ".$SCREEN_NAME\t") ]];
+	if [ -n "$SCREEN_NAME" ] && screen -ls | grep -q ".$SCREEN_NAME\t"; then
 		echo "Screen '$SCREEN_NAME' already exists";
 		ERROR=1;
 	fi;
@@ -48,8 +46,7 @@ else
 	ERROR=1;
 fi;
 
-if [ $ERROR -eq 1 ];
-then
+if [ $ERROR -eq 1 ]; then
 	exit;
 fi;
 
@@ -79,11 +76,9 @@ export SCREENCAP="SC|screen.xterm-256color|VT 100/ANSI X3.64 virtual terminal:\
 
 # read the config file and init the screen
 pos=0;
-cat "$1" |
-while read line;
+while read -r line;
 do
-	if [ $pos -eq 0 ];
-	then
+	if [ $pos -eq 0 ]; then
 		# should I clean the title to alphanumeric? (well yes, but not now)
 		SCREEN_NAME=$line;
 		# check that we do not create double entries
@@ -96,11 +91,10 @@ do
 		SCREEN_TITLE=$(echo "$line" | cut -d "#" -f 1);
 		SCREEN_CMD=$(echo "$line" | cut -d "#" -f 2);
 		# screen number is pos - 1
-		SCREEN_POS=$[ $pos-1 ];
+		SCREEN_POS=$(( pos-1 ));
 		# for the first screen, we need to init the screen and only set title
 		# for the rest we set a new screen with title
-		if [ $pos -eq 1 ];
-		then
+		if [ $pos -eq 1 ]; then
 			echo "Init screen with title '$SCREEN_NAME'";
 			screen -dmS "$SCREEN_NAME";
 			# set title for the first
@@ -110,12 +104,11 @@ do
 		fi;
 		echo "[$SCREEN_POS] Set title to '$SCREEN_TITLE'";
 		# run command on it (if there is one)
-		if [ ! -z "$SCREEN_CMD" ];
-		then
+		if [ -n "$SCREEN_CMD" ]; then
 			echo "[$SCREEN_POS] Run command '$SCREEN_CMD'";
 			# if ^M is garbled: in vim do: i, ^V, ENTER, ESCAPE
 			screen -r "$SCREEN_NAME" -p $SCREEN_POS -X stuff $"$SCREEN_CMD^M";
 		fi;
 	fi;
-	pos=$[ $pos+1 ];
-done;
+	pos=$(( pos+1 ));
+done <<<"$(cat "${1}")";
