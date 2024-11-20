@@ -6,7 +6,7 @@ Init screens from config files
 
 ## Config file layout
 
-```
+```txt
 <screen session name>
 <window name>#<command>
 ```
