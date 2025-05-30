@@ -111,7 +111,7 @@ do
 		# for the first screen, we need to init the screen and only set title
 		# for the rest we set a new screen with title
 		if [ $pos -eq 1 ]; then
-			printf "-==> * INIT screen with title '%s'\n" "$SCREEN_NAME";
+			printf "===> * INIT screen with title '%s'\n" "$SCREEN_NAME";
 			screen -dmS "$SCREEN_NAME";
 			# set title for the first
 			screen -r "$SCREEN_NAME" -p $SCREEN_POS -X title "$SCREEN_TITLE";
