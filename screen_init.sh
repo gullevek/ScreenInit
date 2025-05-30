@@ -49,7 +49,6 @@ fi;
 if [ $ERROR -eq 1 ]; then
 	exit;
 fi;
-
 # termcap (echo $TERMCAP)
 # http://web.mit.edu/gnu/doc/html/screen_15.html#SEC89
 # in screen ^-a . to dump current termcap
@@ -83,13 +82,13 @@ do
 		continue;
 	fi;
 	# skip empty lines
-	if [ -n "$line" ]; then
+	if [ -z "$line" ]; then
 		continue;
 	fi;
 	if [ $pos -eq 0 ]; then
 		# should I clean the title to alphanumeric? (well yes, but not now)
 		SCREEN_NAME=$line;
-		if [ -n "$SCREEN_NAME" ]; then
+		if [ -z "$SCREEN_NAME" ]; then
 			echo "No screen name set";
 			exit;
 		fi;
