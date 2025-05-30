@@ -102,7 +102,7 @@ do
 			continue;
 		fi;
 		# skip empty lines
-		if [ -n "$line" ]; then
+		if [ -z "$line" ]; then
 			continue;
 		fi;
 		# extract screen title and command (should also be cleaned for title)
