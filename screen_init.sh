@@ -78,14 +78,6 @@ export SCREENCAP="SC|screen.xterm-256color|VT 100/ANSI X3.64 virtual terminal:\
 pos=0;
 while read -r line;
 do
-	# skip lines that start with ";" these are comments, we do not use # as they are separators
-	if [[ $line =~ ^\; ]]; then
-		continue;
-	fi;
-	# skip empty lines
-	if [ -n "$line" ]; then
-		continue;
-	fi;
 	if [ $pos -eq 0 ]; then
 		# should I clean the title to alphanumeric? (well yes, but not now)
 		SCREEN_NAME=$line;
@@ -103,11 +95,20 @@ do
 			exit;
 		fi;
 	else
+		# screen number is pos - 1
+		SCREEN_POS=$(( pos-1 ));
+		# skip lines that start with ";" these are comments, we do not use # as they are separators
+		if [[ $line =~ ^\; ]]; then
+			echo "[SKIP] [$SCREEN_POS] ${line}";
+			continue;
+		fi;
+		# skip empty lines
+		if [ -n "$line" ]; then
+			continue;
+		fi;
 		# extract screen title and command (should also be cleaned for title)
 		SCREEN_TITLE=$(echo "$line" | cut -d "#" -f 1);
 		SCREEN_CMD=$(echo "$line" | cut -d "#" -f 2);
-		# screen number is pos - 1
-		SCREEN_POS=$(( pos-1 ));
 		# for the first screen, we need to init the screen and only set title
 		# for the rest we set a new screen with title
 		if [ $pos -eq 1 ]; then
