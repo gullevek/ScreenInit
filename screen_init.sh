@@ -111,7 +111,7 @@ do
 		# for the first screen, we need to init the screen and only set title
 		# for the rest we set a new screen with title
 		if [ $pos -eq 1 ]; then
-			printf "     * INIT screen with title '%s'\n" "$SCREEN_NAME";
+			printf "-==> * INIT screen with title '%s'\n" "$SCREEN_NAME";
 			screen -dmS "$SCREEN_NAME";
 			# set title for the first
 			screen -r "$SCREEN_NAME" -p $SCREEN_POS -X title "$SCREEN_TITLE";
@@ -121,7 +121,7 @@ do
 		printf "[%2s] + ADD window with title '%s'\n" $SCREEN_POS "$SCREEN_TITLE";
 		# run command on it (if there is one)
 		if [ -n "$SCREEN_CMD" ]; then
-			printf "     > RUN command to '%s'\n" $SCREEN_POS "$SCREEN_CMD";
+			printf "     > RUN command '%s'\n" "$SCREEN_CMD";
 			# if ^M is garbled: in vim do: i, ^V, ENTER, ESCAPE
 			screen -r "$SCREEN_NAME" -p $SCREEN_POS -X stuff $"$SCREEN_CMD^M";
 		fi;
