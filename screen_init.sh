@@ -101,7 +101,7 @@ do
 		SCREEN_CMD=$(echo "$line" | cut -d "#" -f 2);
 		# skip lines that start with ";" these are comments, we do not use # as they are separators
 		if [[ $line =~ ^\; ]]; then
-			printf "[%>2s] [SKIP] '%s' with command '%s'" $SCREEN_POS "$SCREEN_TITLE" "$SCREEN_CMD";
+			printf "[%2s] [SKIP] '%s' with command '%s'" $SCREEN_POS "$SCREEN_TITLE" "$SCREEN_CMD";
 			continue;
 		fi;
 		# skip empty lines
@@ -118,7 +118,7 @@ do
 		else
 			screen -r "$SCREEN_NAME" -X screen -t "$SCREEN_TITLE" $SCREEN_POS;
 		fi;
-		printf "[%>2s] + ADD window with title '%s'" $SCREEN_POS "$SCREEN_TITLE";
+		printf "[%2s] + ADD window with title '%s'" $SCREEN_POS "$SCREEN_TITLE";
 		# run command on it (if there is one)
 		if [ -n "$SCREEN_CMD" ]; then
 			printf "     > RUN command to '%s'" $SCREEN_POS "$SCREEN_CMD";
