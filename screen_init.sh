@@ -96,18 +96,18 @@ do
 	else
 		# screen number is pos - 1
 		SCREEN_POS=$(( pos-1 ));
+		# extract screen title and command (should also be cleaned for title)
+		SCREEN_TITLE=$(echo "$line" | cut -d "#" -f 1);
+		SCREEN_CMD=$(echo "$line" | cut -d "#" -f 2);
 		# skip lines that start with ";" these are comments, we do not use # as they are separators
 		if [[ $line =~ ^\; ]]; then
-			echo "[SKIP] [$SCREEN_POS] ${line}";
+			echo "[SKIP] [$SCREEN_POS] '${SCREEN_TITLE}' with command '${SCREEN_CMD}'";
 			continue;
 		fi;
 		# skip empty lines
 		if [ -z "$line" ]; then
 			continue;
 		fi;
-		# extract screen title and command (should also be cleaned for title)
-		SCREEN_TITLE=$(echo "$line" | cut -d "#" -f 1);
-		SCREEN_CMD=$(echo "$line" | cut -d "#" -f 2);
 		# for the first screen, we need to init the screen and only set title
 		# for the rest we set a new screen with title
 		if [ $pos -eq 1 ]; then
@@ -118,10 +118,10 @@ do
 		else
 			screen -r "$SCREEN_NAME" -X screen -t "$SCREEN_TITLE" $SCREEN_POS;
 		fi;
-		echo "[$SCREEN_POS] Set title to '$SCREEN_TITLE'";
+		echo "[$SCREEN_POS] + Set title to '$SCREEN_TITLE'";
 		# run command on it (if there is one)
 		if [ -n "$SCREEN_CMD" ]; then
-			echo "[$SCREEN_POS] Run command '$SCREEN_CMD'";
+			echo "[$SCREEN_POS] > Run command '$SCREEN_CMD'";
 			# if ^M is garbled: in vim do: i, ^V, ENTER, ESCAPE
 			screen -r "$SCREEN_NAME" -p $SCREEN_POS -X stuff $"$SCREEN_CMD^M";
 		fi;
