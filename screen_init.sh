@@ -101,7 +101,7 @@ do
 		SCREEN_CMD=$(echo "$line" | cut -d "#" -f 2);
 		# skip lines that start with ";" these are comments, we do not use # as they are separators
 		if [[ $line =~ ^\; ]]; then
-			printf "[%2s] [SKIP] '%s' with command '%s'" $SCREEN_POS "$SCREEN_TITLE" "$SCREEN_CMD";
+			printf "[%2s] [SKIP] '%s' with command '%s'\n" $SCREEN_POS "$SCREEN_TITLE" "$SCREEN_CMD";
 			continue;
 		fi;
 		# skip empty lines
@@ -111,17 +111,17 @@ do
 		# for the first screen, we need to init the screen and only set title
 		# for the rest we set a new screen with title
 		if [ $pos -eq 1 ]; then
-			printf "     * INIT screen with title '%s'" "$SCREEN_NAME";
+			printf "     * INIT screen with title '%s'\n" "$SCREEN_NAME";
 			screen -dmS "$SCREEN_NAME";
 			# set title for the first
 			screen -r "$SCREEN_NAME" -p $SCREEN_POS -X title "$SCREEN_TITLE";
 		else
 			screen -r "$SCREEN_NAME" -X screen -t "$SCREEN_TITLE" $SCREEN_POS;
 		fi;
-		printf "[%2s] + ADD window with title '%s'" $SCREEN_POS "$SCREEN_TITLE";
+		printf "[%2s] + ADD window with title '%s'\n" $SCREEN_POS "$SCREEN_TITLE";
 		# run command on it (if there is one)
 		if [ -n "$SCREEN_CMD" ]; then
-			printf "     > RUN command to '%s'" $SCREEN_POS "$SCREEN_CMD";
+			printf "     > RUN command to '%s'\n" $SCREEN_POS "$SCREEN_CMD";
 			# if ^M is garbled: in vim do: i, ^V, ENTER, ESCAPE
 			screen -r "$SCREEN_NAME" -p $SCREEN_POS -X stuff $"$SCREEN_CMD^M";
 		fi;
