@@ -78,9 +78,25 @@ export SCREENCAP="SC|screen.xterm-256color|VT 100/ANSI X3.64 virtual terminal:\
 pos=0;
 while read -r line;
 do
+	# skip lines that start with ";" these are comments, we do not use # as they are separators
+	if [[ $line =~ ^\; ]]; then
+		continue;
+	fi;
+	# skip empty lines
+	if [ -n "$line" ]; then
+		continue;
+	fi;
 	if [ $pos -eq 0 ]; then
 		# should I clean the title to alphanumeric? (well yes, but not now)
 		SCREEN_NAME=$line;
+		if [ -n "$SCREEN_NAME" ]; then
+			echo "No screen name set";
+			exit;
+		fi;
+		if [[ ! $SCREEN_NAME =~ ^[A-Za-z0-9]+$ ]]; then
+			echo "Screen name must be alphanumeric: ${SCREEN_NAME}";
+			exit;
+		fi;
 		# check that we do not create double entries
 		if screen -list | grep -q "${SCREEN_NAME}"; then
 			echo "Screen with ${SCREEN_NAME} already exists";
