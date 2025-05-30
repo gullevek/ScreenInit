@@ -81,16 +81,16 @@ do
 		# should I clean the title to alphanumeric? (well yes, but not now)
 		SCREEN_NAME=$line;
 		if [ -z "$SCREEN_NAME" ]; then
-			echo "No screen name set";
+			echo "[!] No screen name set";
 			exit;
 		fi;
 		if [[ ! $SCREEN_NAME =~ ^[A-Za-z0-9]+$ ]]; then
-			echo "Screen name must be alphanumeric: ${SCREEN_NAME}";
+			echo "[!] Screen name must be alphanumeric: ${SCREEN_NAME}";
 			exit;
 		fi;
 		# check that we do not create double entries
 		if screen -list | grep -q "${SCREEN_NAME}"; then
-			echo "Screen with ${SCREEN_NAME} already exists";
+			echo "[!] Screen with ${SCREEN_NAME} already exists";
 			exit;
 		fi;
 	else
@@ -101,7 +101,7 @@ do
 		SCREEN_CMD=$(echo "$line" | cut -d "#" -f 2);
 		# skip lines that start with ";" these are comments, we do not use # as they are separators
 		if [[ $line =~ ^\; ]]; then
-			echo "[SKIP] [$SCREEN_POS] '${SCREEN_TITLE}' with command '${SCREEN_CMD}'";
+			printf "[%>2s] [SKIP] '%s' with command '%s'" $SCREEN_POS "$SCREEN_TITLE" "$SCREEN_CMD";
 			continue;
 		fi;
 		# skip empty lines
@@ -111,17 +111,17 @@ do
 		# for the first screen, we need to init the screen and only set title
 		# for the rest we set a new screen with title
 		if [ $pos -eq 1 ]; then
-			echo "Init screen with title '$SCREEN_NAME'";
+			printf "     * INIT screen with title '%s'" "$SCREEN_NAME";
 			screen -dmS "$SCREEN_NAME";
 			# set title for the first
 			screen -r "$SCREEN_NAME" -p $SCREEN_POS -X title "$SCREEN_TITLE";
 		else
 			screen -r "$SCREEN_NAME" -X screen -t "$SCREEN_TITLE" $SCREEN_POS;
 		fi;
-		echo "[$SCREEN_POS] + Set title to '$SCREEN_TITLE'";
+		printf "[%>2s] + ADD window with title '%s'" $SCREEN_POS "$SCREEN_TITLE";
 		# run command on it (if there is one)
 		if [ -n "$SCREEN_CMD" ]; then
-			echo "[$SCREEN_POS] > Run command '$SCREEN_CMD'";
+			printf "     > RUN command to '%s'" $SCREEN_POS "$SCREEN_CMD";
 			# if ^M is garbled: in vim do: i, ^V, ENTER, ESCAPE
 			screen -r "$SCREEN_NAME" -p $SCREEN_POS -X stuff $"$SCREEN_CMD^M";
 		fi;
